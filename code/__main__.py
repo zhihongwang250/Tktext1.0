@@ -15,6 +15,10 @@ import sys
 from platform import system
 import webbrowser as vb
 
+def choosecolor():
+    mycolor=askcolor()
+    print(type(mycolor),mycolor)
+    text.config(fg=mycolor[1])
 
 def newfile():
     text.delete("1.0",END)
@@ -48,12 +52,12 @@ def save_file():
     with open(filename,'w', encoding='UTF-8') as output:
         output.write(textContent)
         root.title(filename)
+    
 def about():
     about=Tk()
     about.title("关于Tktext")
     Label(about,text='Tktext：使用tkinter制作的文字处理系统\n版权所有(c)zhihongwang250.').pack()
     Separator(about,orient=HORIZONTAL).pack(fill=X,pady=10)
-    Label(about,text='本程序使用MIT许可证。').pack()
     Label(about,text='未经许可，不得抄袭本作品中的任何部分！').pack()
     Separator(about,orient=HORIZONTAL).pack(fill=X,pady=10)
     Label(about,text='TkVersion:{}'.format(TkVersion)).pack()
@@ -93,6 +97,7 @@ def jiacu():
     else:
         font1=Font(weight='normal')
         text.configure(font=font1)
+
 def ok():
     try:
         f=Font(family=entry1.get())
@@ -100,7 +105,7 @@ def ok():
     except NameError:
         messagebox.showinfo('提示','您输入的字体不存在')
         return
-    font=Font(size=gun.get())
+    font=Font(size=entry2.get())
     text.tag_config(SEL,font=font)
 
 def show(event):
@@ -131,7 +136,11 @@ asa1=BooleanVar(root)
 
 entry1=Entry(root)
 entry1.pack(fill=X)
-entry1.insert("1",'在此输入您要的字体(格式：字体名称 字号 是否加粗 斜体？）')
+entry1.insert("1",'在此输入您要的字体')
+
+entry2=Entry(root)
+entry2.pack()
+entry2.insert(0,'您的字号')
 
 check=Checkbutton(root,text='加粗',variable=asa1,command=jiacu)
 check.pack()
@@ -154,6 +163,7 @@ asa=BooleanVar(root)
 asa.set(False)
 
 tanchu=Menu(root,tearoff=0)
+tanchu.add_command(label='文字颜色...',command=choosecolor)
 tanchu.add_command(label='复制',command=copy)
 tanchu.add_command(label='剪切',command=cut)
 tanchu.add_command(label='粘贴',command=paste)
