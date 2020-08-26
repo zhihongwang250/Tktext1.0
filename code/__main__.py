@@ -33,6 +33,7 @@ def exit_ask():
 
 def open_file():
     global filename
+    global contennt
     filename=askopenfilename()
     if filename=='':
         return
@@ -106,10 +107,48 @@ def ok():
         messagebox.showinfo('提示','您输入的字体不存在')
         return
     font=Font(size=entry2.get())
-    text.tag_config(SEL,font=font)
+    text.configure(font=font)
 
 def show(event):
     tanchu.post(event.x_root,event.y_root)
+
+def Tksearch():
+    def searchbox():
+        text.tag_remove('found','1.0',END)
+        start='1.0'
+        key=entry3.get()
+
+        if (len(key.strip())==0):
+            return
+        while True:
+            pos=text.search(key,start,END)
+            if (pos==''):
+                break
+            text.tag_add('found',pos,'%s+%dc'%(pos,len(key)))
+            start='%s+%dc'%(pos,len(key))
+    search=Tk()
+    search.title('Tksearch')
+    Label(search,text='请输入要查找的内容：').pack()
+    entry3=Entry(search)
+    entry3.pack()
+    Button(search,text='确定',command=searchbox).pack()
+    search.mainloop()
+
+def normal():
+    text.tag_remove('found','1.0',END)
+
+def about_this():
+    try:
+        with open(filename,'r',encoding='UTF-8') as file:
+            contennt=file.read()
+        text=contennt.rsplit()
+        aboutthis=Tk()
+        aboutthis.title('关于这个文档')
+        Label(aboutthis,text='关于这个文档'+filename+'\n').grid(row=0,column=0)
+        Label(aboutthis,text='共有'+str(len(text))+'字').grid(row=1,column=0)
+        aboutthis.mainloop()
+    except NameError:
+        messagebox.showerror(message='您未打开文件或文件错误！')
 
 def copy():
     try:
@@ -164,6 +203,7 @@ asa.set(False)
 
 tanchu=Menu(root,tearoff=0)
 tanchu.add_command(label='文字颜色...',command=choosecolor)
+tanchu.add_command(label='清除高亮...',command=normal)
 tanchu.add_command(label='复制',command=copy)
 tanchu.add_command(label='剪切',command=cut)
 tanchu.add_command(label='粘贴',command=paste)
@@ -176,9 +216,13 @@ file.add_command(label='保存文档',command=save_file,accelerator='Ctrl+S')
 root.config(menu=menubar)
 menubar.add_cascade(label='设置(S)',menu=file2)
 file2.add_checkbutton(label='只读',command=readonly,variable=asa)
+file2.add_command(label='Tksearch文字查找',command=Tksearch)
+file2.add_command(label='关于这个文档...',command=about_this)
 root.config(menu=menubar)
 menubar.add_cascade(label='帮助(H)',menu=file3)
 file3.add_command(label='帮助',command=open_help)
 root.config(menu=menubar)
 menubar.add_cascade(label='关于(A)',command=about)
+
+text.tag_configure('found',background='yellow')
 root.mainloop()
