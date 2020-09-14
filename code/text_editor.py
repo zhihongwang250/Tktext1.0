@@ -9,7 +9,7 @@ from tkinter.colorchooser import*
 from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import asksaveasfilename
 from tkinter.scrolledtext import ScrolledText
-from tkinter.ttk import Separator
+from tkinter.ttk import Separator,Button
 
 import sys
 from platform import system
@@ -63,6 +63,8 @@ def about():
     Separator(about,orient=HORIZONTAL).pack(fill=X,pady=10)
     Label(about,text='TkVersion:{}'.format(TkVersion)).pack()
     Label(about,text='System:{}'.format(system())).pack()
+    Label(about,text='Python Version:{}'.format(sys.version[:6])).pack()
+    Button(about,text='确定',command=about.destroy).pack()
     about.mainloop()
 
 def readonly():
@@ -101,13 +103,11 @@ def jiacu():
 
 def ok():
     try:
-        f=Font(family=entry1.get())
+        f=Font(family=entry1.get(),size=entry2.get())
         text.configure(font=f)
     except NameError:
         messagebox.showinfo('提示','您输入的字体不存在')
         return
-    font=Font(size=entry2.get())
-    text.configure(font=font)
 
 def show(event):
     tanchu.post(event.x_root,event.y_root)

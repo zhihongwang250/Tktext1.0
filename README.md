@@ -20,3 +20,8 @@
 新增Tksearch文字查找功能（text-search）
 新增网页介绍
 </pre>
+#### 1.4.3
+<pre>
+修复一些bug
+新增Python编辑器（文件运行有BUG，未开放）
+</pre>
